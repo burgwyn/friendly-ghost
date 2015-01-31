@@ -16,20 +16,42 @@
     <meta name="twitter:card"    content="summary" />
     <meta name="twitter:site"    content="@burgwyn" />
     <meta name="twitter:creator" content="@burgwyn" />
+    <meta name="twitter:title"   content="{{meta_title}}" />
+    <meta name="twitter:url"     content="{{@blog.url}}{{url absolute="true"}}" />
+    {{#is "post, page"}}
+    <meta name="twitter:description" content="{{excerpt characters="200"}}" />
+    {{else}}
+    <meta name="twitter:description" content="{{@blog.description}}" />
+    {{/is}}
 
     <!-- OpenGraph Metadata -->
-    <meta property="og:title"       content="{{@blog.title}}" />
+    {{#is "post, page"}}
+    <meta property="og:description" content="{{meta_description}}" />
+    <meta property="og:type"        content="article" />
+    {{else}}
     <meta property="og:description" content="{{@blog.description}}" />
     <meta property="og:type"        content="website" />
+    {{/is}}
+    <meta property="og:title"       content="{{meta_title}}" />
     <meta property="og:site_name"   content="{{@blog.title}}" />
     <meta property="og:url"         content="{{@blog.url}}" />
-    <meta property="og:image"       content="{{@blog.url}}/{{asset "facebook.jpg"}}" />
+    <meta property="og:image"       content="{{@blog.url}}{{asset "facebook.jpg"}}" />
 
     <link rel="shortcut icon" href="{{asset "favicon.ico"}}">
 
     {{! Styles'n'Scripts }}
     <link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400" />
+
+    <script type="text/javascript">
+
+      {{> config}}
+
+      window.FRIENDLY_GHOST = {};
+      FRIENDLY_GHOST.isGA = typeof ga_ua !== 'undefined' && ga_ua !== 'UA-XXXXX-X';
+      FRIENDLY_GHOST.isTwitter = typeof twitter_username !== 'undefined' && twitter_username !== 'username';
+
+    </script>
 
     {{! Ghost outputs important style and meta data with this tag }}
     {{ghost_head}}
@@ -54,16 +76,18 @@
     <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script>
     <script type="text/javascript" src="{{asset "js/index.js"}}"></script>
     <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '']);
-      _gaq.push(['_setDomainName', '']);
-      _gaq.push(['_trackPageview']);
 
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+    if(FRIENDLY_GHOST.isGA) {
+
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', ga_ua, 'auto');
+      ga('send', 'pageview');
+
+    }
     </script>
 </body>
 </html>
